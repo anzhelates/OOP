@@ -16,8 +16,13 @@ class Vehicle {
         virtual ~Vehicle() = default;
 
         string getName() const { return m_name; }
-        virtual double getSpeed(RoadType roadType) const = 0;
+        virtual double getSpeed() const = 0;
         virtual double calculateFuel(double distance) const {
-        return (distance / 100.0) * m_fuelEfficiency;
-    }
+            return (distance / 100.0) * m_fuelEfficiency;
+        }
+        virtual bool canUse(RoadType type) const = 0;
+        virtual double getObstacle() const = 0;
+        virtual double travelTime(double distance) const {
+            return distance / m_speed;
+        }
 };
