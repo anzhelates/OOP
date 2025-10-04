@@ -1,12 +1,14 @@
 #pragma once
 
+#include <string>
 #include "Vehicle.h"
 
 class Train : public Vehicle {
 public:
-    Train(const string& name = "Trainn", double speed = 160, double fuel = 25)
+    Train(const std::string& name = "Train", double speed = 160, double fuel = 25)
         : Vehicle(name, speed, fuel) {}
-    double getSpeed(RoadType type) const override {
-        return (type == RoadType::RAIL) ? m_speed : 0;
+    bool canUse(RoadType type) const override { return type == RoadType::RAIL; }
+    double getSpeed(RoadCharacteristic characteristic) const override {
+        return m_speed;
     }
 };
