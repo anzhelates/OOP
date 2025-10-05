@@ -1,0 +1,6 @@
+#pragma once
+
+enum class RoadType { ROAD, RAIL, AIR, WATER };
+enum class RoadCharacteristic { HIGHWAY, CITY, DIRT_ROAD, PARK, STANDARD, DENSELY_POPULATED_CITY };
+enum class ObstacleCause { TRAFFIC_JAM, ACCIDENT, CONSTRUCTION, WEATHER_HEAVY_RAIN, WEATHER_SNOW, WEATHER_WIND, CUSTOM_DELAY };
+enum class ObstacleImpact { ALL_VEHICLES, ROAD, RAIL, AIR, WATER };
