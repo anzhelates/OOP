@@ -2,16 +2,17 @@
 
 #include <string>
 #include <limits>
-#include "Edge.h"
+#include "EnumClasses.h"
 
 class Vehicle {
     protected:
         std::string m_name;
         double m_speed;
         double m_fuelEfficiency;
+
     public:
         Vehicle(const std::string& name, double speed, double fuelEfficiency)
-            : m_name(name), m_speed(speed), m_fuelEfficiency(fuelEfficiency)  {}
+            : m_name(name), m_speed(speed), m_fuelEfficiency(fuelEfficiency) {}
         virtual ~Vehicle() = default;
 
         const std::string& getName() const { return m_name; }
