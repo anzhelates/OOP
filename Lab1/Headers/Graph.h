@@ -15,25 +15,23 @@ class Graph {
         virtual ~Graph() {
             for (auto* vertex : m_vertices) { delete vertex; }
             for (auto* edge : m_edges) { delete edge; }
+            m_vertices.clear();
+            m_edges.clear();
         }
 
-        int addVertex(TVertex* vertex) {
-            if (!vertex) return -1;
-            int newId = m_vertices.size();
-            vertex->setId(newId);
-            m_vertices.push_back(vertex);
-            return newId;
-        }
-        virtual void removeVertex(int id) = 0;
+        virtual int addVertex(TVertex* vertex) = 0;
         virtual void addEdge(TEdge* edge) = 0;
+        virtual void removeVertex(int id) = 0;
         virtual void removeEdge(TEdge* edge) = 0;
         bool isDirected() const { return m_directed; }
 
-        TVertex* getVertex(int id) const {
-            if (id >= 0 && id < m_vertices.size()) return m_vertices[id];
+        int getNumberOfVertices() const { return static_cast<int>(m_vertices.size()); }
+        TVertex* getVertexById(int id) const {
+            if (id >= 0 && id < static_cast<int>(m_vertices.size())) return m_vertices[id];
             return nullptr;
         }
+        virtual std::vector<int> getNeighbors(int id) const = 0;
+        virtual TEdge* getEdge(int fromId, int toId) const = 0;
         const std::vector<TVertex*>& getVertices() const { return m_vertices; }
         const std::vector<TEdge*>& getEdges() const { return m_edges; }
-        virtual double getWeight(int fromId, int toId, const Vehicle& vehicle) const = 0;
 };
