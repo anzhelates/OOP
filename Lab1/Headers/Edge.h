@@ -22,6 +22,7 @@ class Edge {
         RoadType m_type;
         RoadCharacteristic m_characteristic;
         std::vector<Obstacle*> m_obstacles;
+        bool m_active = true;
         static ObstacleImpact getImpact(RoadType type);
 
     public:
@@ -37,6 +38,11 @@ class Edge {
         double getDistance() const { return m_distance; }
         RoadType getType() const { return m_type; }
         RoadCharacteristic getCharacteristic() const { return m_characteristic; }
+        std::vector<Obstacle*> getObstacles() const { return m_obstacles; }
+        int getFrom() const { return m_source ? m_source->getId() : -1; }
+        int getTo() const { return m_destination ? m_destination->getId() : -1; }
 
         double calculateTravelTime(const Vehicle& vehicle) const;
+        void markInactive() { m_active = false; }
+        bool isActive() const { return m_active; }
 };
