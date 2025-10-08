@@ -3,9 +3,10 @@
 #include "Graph.h"
 #include <list>
 #include <vector>
+#include <algorithm>
 
 template <typename TVertex, typename TEdge>
-class AdjListGraph : public Graph<TVertex, TEdge> {
+class AdjacencyList : public Graph<TVertex, TEdge> {
 private:
     struct AdjEntry {
         int m_to;
@@ -15,7 +16,8 @@ private:
     std::vector<std::list<AdjEntry>> m_adjList;
 
 public:
-    explicit AdjListGraph(bool directed = true) : Graph<TVertex, TEdge>(directed) {}
+    explicit AdjacencyList(bool directed = true) : Graph<TVertex, TEdge>(directed) {}
+    ~AdjacencyList() override = default;
 
     int addVertex(TVertex* vertex) override {
         if (!vertex) return -1;
@@ -37,21 +39,63 @@ public:
         }
     }
 
+    void removeEdge(TEdge* edge) override {
+        if (!edge) return;
+
+        int from = edge->getFrom();
+        int to = edge->getTo();
+
+        if (from >= 0 && from < static_cast<int>(m_adjList.size())) {
+            for (auto it = m_adjList[from].begin(); it != m_adjList[from].end();) {
+                if (it->m_edge == edge) it = m_adjList[from].erase(it);
+                else ++it;
+            }
+        }
+        if (!this->m_directed && to >= 0 && to < static_cast<int>(m_adjList.size())) {
+            for (auto it = m_adjList[to].begin(); it != m_adjList[to].end();) {
+                if (it->m_edge == edge) it = m_adjList[to].erase(it);
+                else ++it;
+            }
+        }
+        edge->markInactive();
+    }
+
+    void removeVertex(int id) override {
+        if (id < 0 || id >= static_cast<int>(this->m_vertices.size())) return;
+
+        for (int i = 0; i < static_cast<int>(m_adjList.size()); ++i) {
+            if (i == id) continue;
+            for (auto it = m_adjList[i].begin(); it != m_adjList[i].end();) {
+                if (it->m_to == id) it = m_adjList[i].erase(it);
+                else ++it;
+            }
+        }
+
+        for (const auto& entry : m_adjList[id]) {
+            if (entry.m_edge) entry.m_edge->markInactive();
+        }
+
+        m_adjList[id].clear();
+
+        if (this->m_vertices[id]) this->m_vertices[id]->markInactive();
+    }
 
     std::vector<int> getNeighbors(int id) const override {
         std::vector<int> neighbors;
-        if (id >= 0 && id < m_adjList.size()) {
+        if (id >= 0 && id < static_cast<int>(m_adjList.size())) {
             for (const auto& entry : m_adjList[id]) {
-                neighbors.push_back(entry.m_to);
+                if (entry.m_edge && entry.m_edge->isActive())
+                    neighbors.push_back(entry.m_to);
             }
         }
         return neighbors;
     }
 
     TEdge* getEdge(int fromId, int toId) const override {
-        if (fromId >= 0 && fromId < m_adjList.size()) {
+        if (fromId >= 0 && fromId < static_cast<int>(m_adjList.size())) {
             for (const auto& entry : m_adjList[fromId]) {
-                if (entry.m_to == toId) return entry.m_edge;
+                if (entry.m_to == toId && entry.m_edge && entry.m_edge->isActive())
+                    return entry.m_edge;
             }
         }
         return nullptr;
