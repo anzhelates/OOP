@@ -30,7 +30,7 @@ class Route {
         double totalTime(const Vehicle& vehicle) const {
            double total = 0.0;
              for (auto* edge : m_path) {
-                 total += edge->calculateTravelTime(vehicle);
+                 total += edge->calculateTravelTime(*m_vehicle);
              }
              return total;
         }
