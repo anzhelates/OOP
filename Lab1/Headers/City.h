@@ -7,8 +7,10 @@ class City : public Vertex {
     private:
         long m_population;
     public:
-        explicit City(const std::string& name, long population)
-            : Vertex(name), m_population(population) {}
-        ~City() override = default;
-        long getPopulation() const { return m_population; }
+        City(const std::string& name, long population) : Vertex(name), m_population(population)  {}
+
+        long getPopulation() const { return m_population; };
+        bool isDenselyPopulated() const {
+            return m_population >= 1000000;
+        }
 };
