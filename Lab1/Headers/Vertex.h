@@ -5,12 +5,15 @@
 #include "Vehicle.h"
 
 template <typename TVertex, typename TEdge> class Graph;
+template <typename TVertex, typename TEdge> class AdjacencyList;
+template <typename TVertex, typename TEdge> class AdjacencyMatrix;
 
 class Vertex {
     private:
         int m_id = -1;
         std::string m_name;
         std::vector<Vehicle*> m_availableVehicles;
+        bool m_active = true;
     protected:
         void setId(int id) { m_id = id; }
     public:
@@ -29,5 +32,10 @@ class Vertex {
         void addVehicle(Vehicle* vehicle) { if(vehicle) m_availableVehicles.push_back(vehicle); }
         const std::vector<Vehicle*>& getAvailableVehicles() const { return m_availableVehicles; }
 
+        void markInactive() { m_active = false; }
+        bool isActive() const { return m_active; }
+
         template <typename TVertexT, typename TEdgeT> friend class Graph;
+        template <typename TVertex, typename TEdge> friend class AdjacencyList;
+        template <typename TVertex, typename TEdge> friend class AdjacencyMatrix;
 };
