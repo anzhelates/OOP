@@ -1,31 +1,26 @@
 #pragma once
+#include "LandVehicle.h"
 
-#include <string>
-#include "Vehicle.h"
+class Car : public LandVehicle {
+public:
+    Car(const std::string& name, double speed, double fuel)
+        : LandVehicle(name, speed, fuel) {}
 
-class Car : public Vehicle {
-    public:
-        Car(const std::string& name = "Car", double speed = 80, double fuel = 7)
-            : Vehicle(name, speed, fuel) {}
+    double getSpeed(ObstacleCause cause, RoadCharacteristic road) const override {
+        double factor = 1.0;
 
-        bool canUse(RoadType type) const override { return type == RoadType::ROAD; }
-        double getSpeed(RoadCharacteristic characteristic) const override {
-            double speed = m_speed;
-            switch (characteristic) {
-                case RoadCharacteristic::HIGHWAY:
-                    speed *= 1.2;
-                    break;
-                case RoadCharacteristic::CITY:
-                    speed *= 0.7;
-                    break;
-                case RoadCharacteristic::DIRT_ROAD:
-                    speed *= 0.4;
-                    break;
-                case RoadCharacteristic::PARK:
-                    speed *= 0.5;
-                    break;
-                default: break;
-            }
-            return speed;
+        if (cause == ObstacleCause::TRAFFIC_JAM) {
+            factor *= 0.4;
+        } else {
+            return LandVehicle::getSpeed(cause, road);
         }
+
+        switch (road) {
+            case RoadCharacteristic::HIGHWAY: factor *= 1.3; break;
+            case RoadCharacteristic::CITY_STREET: factor *= 0.7; break;
+            case RoadCharacteristic::DIRT_ROAD: factor *= 0.8; break;
+            default: break;
+        }
+        return m_speed * factor;
+    }
 };
