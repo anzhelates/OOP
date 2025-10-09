@@ -32,6 +32,7 @@ class Graph {
         }
         virtual std::vector<int> getNeighbors(int id) const = 0;
         virtual TEdge* getEdge(int fromId, int toId) const = 0;
+        virtual std::vector<TEdge*> getEdgesFrom(int fromId) const = 0;
         const std::vector<TVertex*>& getVertices() const { return m_vertices; }
         const std::vector<TEdge*>& getEdges() const { return m_edges; }
 };
