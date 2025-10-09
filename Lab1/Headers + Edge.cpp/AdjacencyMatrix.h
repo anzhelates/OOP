@@ -2,15 +2,14 @@
 
 #include "Graph.h"
 #include <vector>
-#include <algorithm>
 
 template <typename TVertex, typename TEdge>
-class AdjMatrixGraph : public Graph<TVertex, TEdge> {
+class AdjacencyMatrix : public Graph<TVertex, TEdge> {
 private:
     std::vector<std::vector<TEdge*>> m_adjMatrix;
 
 public:
-    explicit AdjMatrixGraph(bool directed = true) : Graph<TVertex, TEdge>(directed) {}
+    explicit AdjacencyMatrix(bool directed = true) : Graph<TVertex, TEdge>(directed) {}
 
     int addVertex(TVertex* vertex) override {
         if (!vertex) return -1;
@@ -33,6 +32,7 @@ public:
         if (to < 0 || to >= static_cast<int>(this->m_vertices.size())) return;
 
         if (m_adjMatrix[from][to] != nullptr) return;
+        edge->markActive();
         this->m_edges.push_back(edge);
         m_adjMatrix[from][to] = edge;
         if (!this->m_directed) {
@@ -87,5 +87,18 @@ public:
             if (e && e->isActive()) return e;
         }
         return nullptr;
+    }
+
+    std::vector<TEdge*> getEdgesFrom(int fromId) const override {
+        std::vector<TEdge*> result;
+        if (fromId >= 0 && fromId < static_cast<int>(m_adjMatrix.size())) {
+            for (size_t to = 0; to < m_adjMatrix[fromId].size(); ++to) {
+                TEdge* edge = m_adjMatrix[fromId][to];
+                if (edge && edge->isActive()) {
+                    result.push_back(edge);
+                }
+            }
+        }
+        return result;
     }
 };

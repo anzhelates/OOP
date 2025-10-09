@@ -30,6 +30,7 @@ public:
 
     void addEdge(TEdge* edge) override {
         if (!edge || !edge->getSource() || !edge->getDestination()) return;
+        edge->markActive();
         this->m_edges.push_back(edge);
         int from = edge->getSource()->getId();
         int to = edge->getDestination()->getId();
@@ -40,7 +41,7 @@ public:
     }
 
     void removeEdge(TEdge* edge) override {
-        if (!edge) return;
+        if (!edge || !edge->getSource() || !edge->getDestination()) return;
 
         int from = edge->getFrom();
         int to = edge->getTo();
@@ -99,5 +100,16 @@ public:
             }
         }
         return nullptr;
+    }
+    std::vector<TEdge*> getEdgesFrom(int fromId) const override {
+        std::vector<TEdge*> result;
+        if (fromId >= 0 && fromId < static_cast<int>(this->m_adjList.size())) {
+            for (const auto& entry : this->m_adjList[fromId]) {
+                if (entry.m_edge && entry.m_edge->isActive()) {
+                    result.push_back(entry.m_edge);
+                }
+            }
+        }
+        return result;
     }
 };
