@@ -43,13 +43,12 @@ Vertex (int m_id, std::string m_name, std::vector<Vehicle*> m_availableVehicles,
 Edge (m_source, m_destination, m_distance, m_type, m_characteristic, m_obstacles, m_active),
 AdjacencyList (struct AdjEntry (int m_to, TEdge* m_edge), std::vector<std::list<AdjEntry>> m_adjList),
 AdjacencyMatrix (std::vector<std::vector<TEdge*>> m_adjMatrix),
-GraphAlgorithm,
 Vehicle (std::string m_name, double m_speed, double m_fuelEfficiency),
 City (long m_population),
 Route (Vertex* m_startVertex = nullptr, Vertex* m_endVertex = nullptr, const Vehicle* m_vehicle = nullptr, std::vector<Edge*> m_path),
 enum classes RoadType, RoadCharacteristics, ObstacleCause.
 
-3. Не менше 25 нетривіальних методів або функцій:
+4. Не менше 25 нетривіальних методів або функцій:
 Graph (addVertex(TVertex* vertex), addEdge(TEdge* edge), removeVertex(int id), removeEdge(TEdge* edge) isDirected()),
 Vertex (addVehicle(Vehicle* vehicle), markInactive(), isActive()),
 Edge (addObstacle(Obstacle* obstacle), calculateTravelTime(const Vehicle& vehicle), markInactive(), markActive(), isActive()),
@@ -59,7 +58,7 @@ City (isDenselyPopulated()),
 Route (addEdge(Edge* edge), totalTime(const Vehicle& vehicle), totalDistance(), totalFuel(const Vehicle& vehicle)),
 enum classes RoadType, RoadCharacteristics, ObstacleCause.
 
-4. Не менше 2 ієрархій успадкування, хоча б одна з який містить не менше 3 класів:
+6. Не менше 2 ієрархій успадкування, хоча б одна з який містить не менше 3 класів:
 Graph->AdjacencyList
 Graph->AdjacencyMatrix
 Vehicle->LandVehicle->Car
@@ -68,8 +67,12 @@ Vehicle->AirVehicle
 Vehicle->WaterVehicle
 Vertex->City
 
-5. Не менше 3 незалежних випадків поліморфізму:
+8. Не менше 3 незалежних випадків поліморфізму:
 Динамічний: віртуальні методи у Graph, Vehicle;
-Статичний: шаблонні класи: Graph<TVertex, TEdge>, AdjacencyList<TVertex, TEdge>, AdjacencyMatrix<TVertex, TEdge>, GraphAlgorithm<TVertex, TEdge>, шаблонні методи template <typename TVertex, typename TEdge>, static std::vector<int> BFS, template <typename TVertex, typename TEdge> static std::vector<int> DFS, template <typename TVertex, typename TEdge> static std::vector<double> Dijkstra, template <typename TVertex, typename TEdge> static bool isConnected
-Інкапсуляція: усі поля приватні/захищені, доступ лише через геттери/сеттери.
+Статичний: шаблонні класи: Graph<TVertex, TEdge>, AdjacencyList<TVertex, TEdge>, AdjacencyMatrix<TVertex, TEdge>, GraphAlgorithm<TVertex, TEdge>,
+шаблонні методи BFS, DFS, Dijkstra, isConnected;
+Інкапсуляція: усі поля приватні/захищені, доступ можливий лише через геттери/сеттери
 Абстракція: абстрактний клас Vehicle, абстрактний шаблонний клас Graph.
+
+Додатково:
+Реалізовано unit tests із використанням doctest.h.
