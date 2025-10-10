@@ -3,22 +3,52 @@
 #include "Graph.h"
 #include <list>
 #include <vector>
-#include <algorithm>
 
+/**
+ * @class AdjacencyList
+ * @brief Represents a graph using an adjacency list
+ * @tparam TVertex The type of data stored in a vertex
+ * @tparam TEdge The type of data stored in an edge
+ */
 template <typename TVertex, typename TEdge>
 class AdjacencyList : public Graph<TVertex, TEdge> {
 private:
+    /**
+     * @struct AdjEntry
+     * @brief A helper structure to store an entry in the adjacency list
+     */
     struct AdjEntry {
-        int m_to;
-        TEdge* m_edge;
+        int m_to;       ///< ID of the destination vertex
+        TEdge* m_edge;  ///< Pointer to the edge connecting the vertices
+
+        /**
+         * @brief Constructs an AdjEntry
+         * @param to The ID of the destination vertex
+         * @param edge A pointer to the edge object
+         */
         AdjEntry(int to, TEdge* edge) : m_to(to), m_edge(edge) {}
     };
+
+    /// @brief The adjacency list, each index corresponds to a vertex ID
     std::vector<std::list<AdjEntry>> m_adjList;
 
 public:
+    /**
+     * @brief Constructs an AdjacencyList graph
+     * @param directed Checks whether the graph is directed or not
+     */
     explicit AdjacencyList(bool directed = true) : Graph<TVertex, TEdge>(directed) {}
+
+    /**
+     * @brief Default destructor
+     */
     ~AdjacencyList() override = default;
 
+    /**
+     * @brief Adds a new vertex to the graph
+     * @param vertex A pointer to the vertex to add
+     * @return The ID assigned to the new vertex, or -1 if the vertex is null
+     */
     int addVertex(TVertex* vertex) override {
         if (!vertex) return -1;
         int id = this->m_vertices.size();
@@ -28,6 +58,10 @@ public:
         return id;
     }
 
+    /**
+     * @brief Adds a new edge to the graph
+     * @param edge A pointer to the edge to add
+     */
     void addEdge(TEdge* edge) override {
         if (!edge || !edge->getSource() || !edge->getDestination()) return;
         edge->markActive();
@@ -40,6 +74,10 @@ public:
         }
     }
 
+    /**
+     * @brief Removes an edge from the graph, marks it as inactive
+     * @param edge A pointer to the edge to remove.
+     */
     void removeEdge(TEdge* edge) override {
         if (!edge || !edge->getSource() || !edge->getDestination()) return;
 
@@ -61,6 +99,11 @@ public:
         edge->markInactive();
     }
 
+    /**
+     * @brief Removes a vertex from the graph by marking it as inactive
+     * @details All edges connected to this vertex are also marked as inactive
+     * @param id The ID of the vertex to remove
+     */
     void removeVertex(int id) override {
         if (id < 0 || id >= static_cast<int>(this->m_vertices.size())) return;
 
@@ -81,6 +124,11 @@ public:
         if (this->m_vertices[id]) this->m_vertices[id]->markInactive();
     }
 
+    /**
+     * @brief Gets the IDs of all neighboring vertices for a given vertex
+     * @param id The ID of the source vertex
+     * @return A vector of IDs of neighbor vertices
+     */
     std::vector<int> getNeighbors(int id) const override {
         std::vector<int> neighbors;
         if (id >= 0 && id < static_cast<int>(m_adjList.size())) {
@@ -92,6 +140,12 @@ public:
         return neighbors;
     }
 
+    /**
+     * @brief Retrieves the edge between two vertices
+     * @param fromId The ID of the source vertex
+     * @param toId The ID of the destination vertex
+     * @return A pointer to the edge if it exists and is active, otherwise nullptr
+     */
     TEdge* getEdge(int fromId, int toId) const override {
         if (fromId >= 0 && fromId < static_cast<int>(m_adjList.size())) {
             for (const auto& entry : m_adjList[fromId]) {
@@ -101,6 +155,12 @@ public:
         }
         return nullptr;
     }
+
+    /**
+     * @brief Retrieves all outgoing edges from a specific vertex
+     * @param fromId The ID of the source vertex
+     * @return A vector of pointers to all active outgoing edges
+     */
     std::vector<TEdge*> getEdgesFrom(int fromId) const override {
         std::vector<TEdge*> result;
         if (fromId >= 0 && fromId < static_cast<int>(this->m_adjList.size())) {

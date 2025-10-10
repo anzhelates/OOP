@@ -3,14 +3,30 @@
 #include "Graph.h"
 #include <vector>
 
+/**
+ * @class AdjacencyMatrix
+ * @brief Represents a graph using an adjacency matrix
+ * @tparam TVertex The type of data stored in a vertex
+ * @tparam TEdge The type of data stored in an edge
+ */
 template <typename TVertex, typename TEdge>
 class AdjacencyMatrix : public Graph<TVertex, TEdge> {
 private:
+    /// @brief The 2D vector representing the adjacency matrix
     std::vector<std::vector<TEdge*>> m_adjMatrix;
 
 public:
+    /**
+     * @brief Constructs an AdjacencyMatrix graph
+     * @param directed Checks whether the graph is directed
+     */
     explicit AdjacencyMatrix(bool directed = true) : Graph<TVertex, TEdge>(directed) {}
 
+    /**
+     * @brief Adds a new vertex to the graph
+     * @param vertex A pointer to the vertex to add
+     * @return The ID assigned to the new vertex, or -1 if the vertex is null
+     */
     int addVertex(TVertex* vertex) override {
         if (!vertex) return -1;
         int id = static_cast<int>(this->m_vertices.size());
@@ -24,6 +40,10 @@ public:
         return id;
     }
 
+    /**
+     * @brief Adds a new edge to the graph
+     * @param edge A pointer to the edge to add
+     */
     void addEdge(TEdge* edge) override {
         if (!edge || !edge->getSource() || !edge->getDestination()) return;
         int from = edge->getSource()->getId();
@@ -40,6 +60,10 @@ public:
         }
     }
 
+    /**
+     * @brief Removes an edge from the graph, marks it as inactive
+     * @param edge A pointer to the edge to remove
+     */
     void removeEdge(TEdge* edge) override {
         if (!edge) return;
 
@@ -54,6 +78,10 @@ public:
         edge->markInactive();
     }
 
+    /**
+     * @brief Removes a vertex from the graph, marks it as inactive
+     * @param id The ID of the vertex to remove
+     */
     void removeVertex(int id) override {
         if (id < 0 || id >= static_cast<int>(this->m_vertices.size())) return;
 
@@ -68,6 +96,11 @@ public:
         if (this->m_vertices[id]) this->m_vertices[id]->markInactive();
     }
 
+    /**
+     * @brief Gets the IDs of all neighboring vertices for a given vertex
+     * @param id The ID of the source vertex
+     * @return A vector of IDs of neighbor vertices
+     */
     std::vector<int> getNeighbors(int id) const override {
         std::vector<int> neighbors;
         if (id >= 0 && id < static_cast<int>(m_adjMatrix.size())) {
@@ -80,6 +113,12 @@ public:
         return neighbors;
     }
 
+    /**
+     * @brief Retrieves the edge between two vertices
+     * @param fromId The ID of the source vertex
+     * @param toId The ID of the destination vertex
+     * @return A pointer to the edge if it exists and is active, otherwise nullptr
+     */
     TEdge* getEdge(int fromId, int toId) const override {
         if (fromId >= 0 && fromId < static_cast<int>(m_adjMatrix.size())
             && toId >= 0 && toId < static_cast<int>(m_adjMatrix.size())) {
@@ -89,6 +128,11 @@ public:
         return nullptr;
     }
 
+    /**
+     * @brief Retrieves all outgoing edges from a specific vertex
+     * @param fromId The ID of the source vertex
+     * @return A vector of pointers to all active outgoing edges
+     */
     std::vector<TEdge*> getEdgesFrom(int fromId) const override {
         std::vector<TEdge*> result;
         if (fromId >= 0 && fromId < static_cast<int>(m_adjMatrix.size())) {
