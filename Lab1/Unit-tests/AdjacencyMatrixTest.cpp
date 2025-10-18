@@ -17,7 +17,7 @@ static City* makeCity(const std::string& name, long population = 1000) {
     return new City(name, population);
 }
 
-TEST_CASE("AdjMatrixGraph: addVertex, addEdge, directed") {
+TEST_CASE("addVertex, addEdge, directed") {
     AdjacencyMatrix<City, Edge> g(true);
     auto* a = makeCity("A");
     auto* b = makeCity("B");
@@ -36,7 +36,7 @@ TEST_CASE("AdjMatrixGraph: addVertex, addEdge, directed") {
     CHECK(e->isActive());
 }
 
-TEST_CASE("AdjMatrixGraph: undirected") {
+TEST_CASE("undirected") {
     AdjacencyMatrix<City, Edge> g(false);
     auto* a = makeCity("A");
     auto* b = makeCity("B");
@@ -58,7 +58,7 @@ TEST_CASE("AdjMatrixGraph: undirected") {
     CHECK(nB[0] == a->getId());
 }
 
-TEST_CASE("AdjMatrixGraph: removeEdge and removeVertex") {
+TEST_CASE("removeEdge and removeVertex") {
     AdjacencyMatrix<City, Edge> g(false);
     auto* a = makeCity("A");
     auto* b = makeCity("B");
@@ -84,7 +84,7 @@ TEST_CASE("AdjMatrixGraph: removeEdge and removeVertex") {
     CHECK(g.getEdge(b->getId(), c->getId()) == nullptr);
 }
 
-TEST_CASE("AdjMatrixGraph: getNeighbors, edges sum and invalid ID") {
+TEST_CASE("getNeighbors, edges sum and invalid ID") {
     AdjacencyMatrix<City, Edge> g(true);
     auto* a = makeCity("A");
     auto* b = makeCity("B");
