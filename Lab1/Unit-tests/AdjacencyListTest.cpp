@@ -15,7 +15,7 @@ static City* makeCity(const std::string& name, long population = 1000) {
     return new City(name, population);
 }
 
-TEST_CASE("AdjacencyList: basic vertex operations") {
+TEST_CASE("basic vertex operations") {
     AdjacencyList<City, Edge> g(false);
 
     CHECK(g.getNumberOfVertices() == 0);
@@ -35,7 +35,7 @@ TEST_CASE("AdjacencyList: basic vertex operations") {
     CHECK(g.getVertexById(id2)->isActive());
 }
 
-TEST_CASE("AdjacencyList: addEdge, getNeighbors and getEdgesFrom undirected") {
+TEST_CASE("addEdge, getNeighbors, getEdge and getEdgesFrom undirected") {
     AdjacencyList<City, Edge> g(false);
 
     auto* c1 = makeCity("A", 1000);
@@ -82,7 +82,7 @@ TEST_CASE("AdjacencyList: addEdge, getNeighbors and getEdgesFrom undirected") {
     }
 }
 
-TEST_CASE("AdjacencyList: directed edge") {
+TEST_CASE("directed edge") {
     AdjacencyList<City, Edge> g(true);
 
     auto* a = makeCity("A", 1000);
@@ -104,7 +104,7 @@ TEST_CASE("AdjacencyList: directed edge") {
     CHECK(g.getEdge(b->getId(), a->getId()) == nullptr);
 }
 
-TEST_CASE("AdjacencyList: removeEdge and removeVertex") {
+TEST_CASE("removeEdge and removeVertex") {
     AdjacencyList<City, Edge> g(false);
     auto* a = makeCity("A", 1000);
     auto* b = makeCity("B", 2000);
@@ -132,7 +132,7 @@ TEST_CASE("AdjacencyList: removeEdge and removeVertex") {
     CHECK(g.getEdge(a->getId(), c->getId()) == e3);
 }
 
-TEST_CASE("AdjacencyList: getEdge correctness and invalid IDs") {
+TEST_CASE("getEdge correctness and invalid IDs") {
     AdjacencyList<City, Edge> g(true);
     auto* a = makeCity("A", 1000);
     auto* b = makeCity("B", 2000);
@@ -148,7 +148,7 @@ TEST_CASE("AdjacencyList: getEdge correctness and invalid IDs") {
     CHECK(g.getEdge(-1, 0) == nullptr);
 }
 
-TEST_CASE("AdjacencyList: edge distances sum") {
+TEST_CASE("edge distances sum") {
     AdjacencyList<City, Edge> g(false);
     auto* a = makeCity("A", 1000);
     auto* b = makeCity("B", 2000);
